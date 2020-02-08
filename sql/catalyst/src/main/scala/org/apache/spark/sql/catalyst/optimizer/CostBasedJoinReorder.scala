@@ -162,7 +162,7 @@ object JoinReorderDP extends PredicateHelper with Logging {
     val topOutputSet = AttributeSet(output)
     while (foundPlans.size < items.length) {
       // Build plans for the next level.
-      foundPlans += searchLevel(foundPlans, conf, conditions, topOutputSet, filters)
+      foundPlans += searchLevel(foundPlans.toSeq, conf, conditions, topOutputSet, filters)
     }
 
     val durationInMs = (System.nanoTime() - startTime) / (1000 * 1000)
@@ -279,10 +279,12 @@ object JoinReorderDP extends PredicateHelper with Logging {
 
     val onePlan = oneJoinPlan.plan
     val otherPlan = otherJoinPlan.plan
+    val outputSet =
+      (onePlan.outputSet ++ otherPlan.outputSet).asInstanceOf[AttributeSet]
     val joinConds = conditions
       .filterNot(l => canEvaluate(l, onePlan))
       .filterNot(r => canEvaluate(r, otherPlan))
-      .filter(e => e.references.subsetOf(onePlan.outputSet ++ otherPlan.outputSet))
+      .filter(e => e.references.subsetOf(outputSet))
     if (joinConds.isEmpty) {
       // Cartesian product is very expensive, so we exclude them from candidate plans.
       // This also significantly reduces the search space.
@@ -298,7 +300,8 @@ object JoinReorderDP extends PredicateHelper with Logging {
     val newJoin = Join(left, right, Inner, joinConds.reduceOption(And), JoinHint.NONE)
     val collectedJoinConds = joinConds ++ oneJoinPlan.joinConds ++ otherJoinPlan.joinConds
     val remainingConds = conditions -- collectedJoinConds
-    val neededAttr = AttributeSet(remainingConds.flatMap(_.references)) ++ topOutput
+    val neededAttr =
+      (AttributeSet(remainingConds.flatMap(_.references)) ++ topOutput).asInstanceOf[AttributeSet]
     val neededFromNewJoin = newJoin.output.filter(neededAttr.contains)
     val newPlan =
       if ((newJoin.outputSet -- neededFromNewJoin).nonEmpty) {

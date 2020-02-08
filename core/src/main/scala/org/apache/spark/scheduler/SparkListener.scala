@@ -20,8 +20,6 @@ package org.apache.spark.scheduler
 import java.util.Properties
 import javax.annotation.Nullable
 
-import scala.collection.Map
-
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 
 import org.apache.spark.TaskEndReason

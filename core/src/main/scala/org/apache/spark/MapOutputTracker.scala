@@ -1017,7 +1017,6 @@ private[spark] object MapOutputTracker extends Logging {
         }
       }
     }
-
-    splitsByAddress.iterator
+    splitsByAddress.iterator.map { case (id, blockIds) => (id, blockIds.toSeq) }
   }
 }

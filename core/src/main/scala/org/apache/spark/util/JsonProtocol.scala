@@ -20,7 +20,6 @@ package org.apache.spark.util
 import java.util.{Properties, UUID}
 
 import scala.collection.JavaConverters._
-import scala.collection.Map
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
@@ -528,7 +527,7 @@ private[spark] object JsonProtocol {
 
   def propertiesToJson(properties: Properties): JValue = {
     Option(properties).map { p =>
-      mapToJson(p.asScala)
+      mapToJson(p.asScala.toMap)
     }.getOrElse(JNothing)
   }
 

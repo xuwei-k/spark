@@ -199,7 +199,7 @@ private[yarn] class YarnAllocator(
    */
   private def getPendingAtLocation(location: String): Seq[ContainerRequest] =
     amClient.getMatchingRequests(RM_REQUEST_PRIORITY, location, resource).asScala
-      .flatMap(_.asScala)
+      .flatMap(_.asScala).toSeq
 
   /**
    * Request as many executors from the ResourceManager as needed to reach the desired total. If
@@ -271,13 +271,13 @@ private[yarn] class YarnAllocator(
           numExecutorsStarting.get,
           allocateResponse.getAvailableResources))
 
-      handleAllocatedContainers(allocatedContainers.asScala)
+      handleAllocatedContainers(allocatedContainers.asScala.toSeq)
     }
 
     val completedContainers = allocateResponse.getCompletedContainersStatuses()
     if (completedContainers.size > 0) {
       logDebug("Completed %d containers".format(completedContainers.size))
-      processCompletedContainers(completedContainers.asScala)
+      processCompletedContainers(completedContainers.asScala.toSeq)
       logDebug("Finished processing %d completed containers. Current running executor count: %d."
         .format(completedContainers.size, runningExecutors.size))
     }
@@ -778,7 +778,7 @@ private[yarn] class YarnAllocator(
       }
     }
 
-    (localityMatched, localityUnMatched, localityFree)
+    (localityMatched.toSeq, localityUnMatched.toSeq, localityFree.toSeq)
   }
 
 }

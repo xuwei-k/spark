@@ -1716,7 +1716,7 @@ private[spark] object Utils extends Logging {
     if (inWord || inDoubleQuote || inSingleQuote) {
       endWord()
     }
-    buf
+    buf.toSeq
   }
 
  /* Calculates 'x' modulo 'mod', takes to consideration sign of x,
@@ -1819,7 +1819,7 @@ private[spark] object Utils extends Logging {
       def hasNext: Boolean = iter.hasNext
       def next(): (T, Long) = {
         index += 1L
-        (iter.next(), index)
+        (iter.next().asInstanceOf[T], index)
       }
     }
   }

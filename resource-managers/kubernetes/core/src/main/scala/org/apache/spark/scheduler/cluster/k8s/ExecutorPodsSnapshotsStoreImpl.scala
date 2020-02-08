@@ -107,7 +107,7 @@ private[spark] class ExecutorPodsSnapshotsStoreImpl(subscribersExecutor: Schedul
     Utils.tryLogNonFatalError {
       val currentSnapshots = mutable.Buffer.empty[ExecutorPodsSnapshot].asJava
       subscriber.snapshotsBuffer.drainTo(currentSnapshots)
-      subscriber.onNewSnapshots(currentSnapshots.asScala)
+      subscriber.onNewSnapshots(currentSnapshots.asScala.toSeq)
     }
   }
 

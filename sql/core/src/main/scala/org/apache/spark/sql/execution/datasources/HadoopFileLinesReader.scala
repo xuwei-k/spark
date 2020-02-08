@@ -46,7 +46,7 @@ class HadoopFileLinesReader(
 
   def this(file: PartitionedFile, conf: Configuration) = this(file, None, conf)
 
-  private val iterator = {
+  private val lineIterator = {
     val fileSplit = new FileSplit(
       new Path(new URI(file.filePath)),
       file.start,
@@ -66,9 +66,9 @@ class HadoopFileLinesReader(
     new RecordReaderIterator(reader)
   }
 
-  override def hasNext: Boolean = iterator.hasNext
+  override def hasNext: Boolean = lineIterator.hasNext
 
-  override def next(): Text = iterator.next()
+  override def next(): Text = lineIterator.next()
 
-  override def close(): Unit = iterator.close()
+  override def close(): Unit = lineIterator.close()
 }

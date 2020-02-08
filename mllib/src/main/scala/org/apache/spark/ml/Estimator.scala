@@ -79,7 +79,7 @@ abstract class Estimator[M <: Model[M]] extends PipelineStage {
    */
   @Since("2.0.0")
   def fit(dataset: Dataset[_], paramMaps: Array[ParamMap]): Seq[M] = {
-    paramMaps.map(fit(dataset, _))
+    paramMaps.toSeq.map(fit(dataset, _))
   }
 
   override def copy(extra: ParamMap): Estimator[M]

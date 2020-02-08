@@ -198,7 +198,7 @@ case class AdaptiveSparkPlanExec(
 
         // In case of errors, we cancel all running stages and throw exception.
         if (errors.nonEmpty) {
-          cleanUpAndThrowException(errors)
+          cleanUpAndThrowException(errors.toSeq)
         }
 
         // Try re-optimizing and re-planning. Adopt the new plan if its cost is equal to or less

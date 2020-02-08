@@ -77,7 +77,7 @@ class JsonProtocolSuite extends SparkFunSuite {
       "Hadoop Properties" -> Seq(("hadoop.tmp.dir", "/usr/local/hadoop/tmp")),
       "System Properties" -> Seq(("Username", "guest"), ("Password", "guest")),
       "Classpath Entries" -> Seq(("Super library", "/tmp/super_library"))
-    ))
+    ).toMap)
     val blockManagerAdded = SparkListenerBlockManagerAdded(1L,
       BlockManagerId("Stars", "In your multitude...", 300), 500)
     val blockManagerRemoved = SparkListenerBlockManagerRemoved(2L,
@@ -111,7 +111,7 @@ class JsonProtocolSuite extends SparkFunSuite {
         Array(543L, 123456L, 12345L, 1234L, 123L, 12L, 432L,
           321L, 654L, 765L, 256912L, 123456L, 123456L, 61728L, 30364L, 15182L, 10L, 90L, 2L, 20L))
       SparkListenerExecutorMetricsUpdate("exec3", Seq((1L, 2, 3, accumUpdates)),
-        Map((0, 0) -> executorUpdates))
+        Map((0, 0) -> executorUpdates).toMap)
     }
     val blockUpdated =
       SparkListenerBlockUpdated(BlockUpdatedInfo(BlockManagerId("Stars",
@@ -915,7 +915,7 @@ private[spark] object JsonProtocolSuite extends Assertions {
       } else {
         Map.empty
       }
-    SparkListenerExecutorMetricsUpdate(execId, taskMetrics, executorMetricsUpdate)
+    SparkListenerExecutorMetricsUpdate(execId, taskMetrics, executorMetricsUpdate.toMap)
   }
 
   /**

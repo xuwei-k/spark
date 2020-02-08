@@ -108,7 +108,7 @@ class ReceiverTracker(ssc: StreamingContext, skipReceiverLaunch: Boolean = false
   private val receivedBlockTracker = new ReceivedBlockTracker(
     ssc.sparkContext.conf,
     ssc.sparkContext.hadoopConfiguration,
-    receiverInputStreamIds,
+    receiverInputStreamIds.toSeq,
     ssc.scheduler.clock,
     ssc.isCheckpointPresent,
     Option(ssc.checkpointDir)
@@ -244,11 +244,8 @@ class ReceiverTracker(ssc: StreamingContext, skipReceiverLaunch: Boolean = false
    */
   def allocatedExecutors(): Map[Int, Option[String]] = synchronized {
     if (isTrackerStarted) {
-      endpoint.askSync[Map[Int, ReceiverTrackingInfo]](GetAllReceiverInfo).mapValues {
-        _.runningExecutor.map {
-          _.executorId
-        }
-      }
+      endpoint.askSync[Map[Int, ReceiverTrackingInfo]](GetAllReceiverInfo).
+        mapValues(_.runningExecutor.map(_.executorId)).toMap
     } else {
       Map.empty
     }

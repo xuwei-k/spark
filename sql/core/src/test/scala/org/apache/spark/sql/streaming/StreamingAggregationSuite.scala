@@ -220,7 +220,7 @@ class StreamingAggregationSuite extends StateStoreMetricsTest with Assertions {
           }
         }
 
-        operatorProgress
+        operatorProgress.toSeq
       }
     }
 

@@ -130,7 +130,8 @@ class MesosClusterSchedulerSuite extends SparkFunSuite with LocalSparkContext wi
       .setHostname("host1")
       .build()
 
-    val capture = ArgumentCaptor.forClass(classOf[Collection[TaskInfo]])
+    val capture = ArgumentCaptor.forClass[Collection[TaskInfo], Collection[TaskInfo]](
+      classOf[Collection[TaskInfo]])
 
     when(
       driver.launchTasks(
@@ -146,7 +147,7 @@ class MesosClusterSchedulerSuite extends SparkFunSuite with LocalSparkContext wi
     val resources = taskInfo.getResourcesList
     assert(scheduler.getResource(resources, "cpus") == 1.5)
     assert(scheduler.getResource(resources, "mem") == 1200)
-    val resourcesSeq: Seq[Resource] = resources.asScala
+    val resourcesSeq: Seq[Resource] = resources.asScala.toSeq
     val cpus = resourcesSeq.filter(_.getName == "cpus").toList
     assert(cpus.size == 2)
     assert(cpus.exists(_.getRole() == "role2"))

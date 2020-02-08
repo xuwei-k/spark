@@ -135,7 +135,7 @@ private[streaming] class ReceiverSchedulingPolicy {
       leastScheduledExecutors += executor
     }
 
-    receivers.map(_.streamId).zip(scheduledLocations).toMap
+    receivers.map(_.streamId).zip(scheduledLocations.map(_.toSeq)).toMap
   }
 
   /**
@@ -181,10 +181,9 @@ private[streaming] class ReceiverSchedulingPolicy {
     // handle this case
     scheduledLocations ++= preferredLocation.map(TaskLocation(_))
 
-    val executorWeights: Map[ExecutorCacheTaskLocation, Double] = {
+    val executorWeights: Map[ExecutorCacheTaskLocation, Double] =
       receiverTrackingInfoMap.values.flatMap(convertReceiverTrackingInfoToExecutorWeights)
-        .groupBy(_._1).mapValues(_.map(_._2).sum) // Sum weights for each executor
-    }
+        .groupBy(_._1).mapValues(_.map(_._2).sum).toMap // Sum weights for each executor
 
     val idleExecutors = executors.toSet -- executorWeights.keys
     if (idleExecutors.nonEmpty) {

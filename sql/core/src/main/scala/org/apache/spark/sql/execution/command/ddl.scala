@@ -653,7 +653,7 @@ case class AlterTableRecoverPartitionsCommand(
     val partitionSpecsAndLocs: Seq[(TablePartitionSpec, Path)] =
       try {
         scanPartitions(spark, fs, pathFilter, root, Map(), table.partitionColumnNames, threshold,
-          spark.sessionState.conf.resolver, new ForkJoinTaskSupport(evalPool)).seq
+          spark.sessionState.conf.resolver, new ForkJoinTaskSupport(evalPool)).toSeq
       } finally {
         evalPool.shutdown()
       }
@@ -692,7 +692,7 @@ case class AlterTableRecoverPartitionsCommand(
     }
 
     val statuses = fs.listStatus(path, filter)
-    val statusPar: GenSeq[FileStatus] =
+    val statusPar: IterableOnce[FileStatus] =
       if (partitionNames.length > 1 && statuses.length > threshold || partitionNames.length > 2) {
         // parallelize the list of partitions here, then we can have better parallelism later.
         val parArray = new ParVector(statuses.toVector)
@@ -720,7 +720,7 @@ case class AlterTableRecoverPartitionsCommand(
         logWarning(s"ignore ${new Path(path, name)}")
         Seq.empty
       }
-    }
+    }.iterator.toSeq
   }
 
   private def gatherPartitionStats(

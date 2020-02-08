@@ -79,13 +79,11 @@ private[spark] class RDDOperationCluster(
   }
 
   /** Return all the nodes which are cached. */
-  def getCachedNodes: Seq[RDDOperationNode] = {
-    _childNodes.filter(_.cached) ++ _childClusters.flatMap(_.getCachedNodes)
-  }
+  def getCachedNodes: Seq[RDDOperationNode] =
+    (_childNodes.filter(_.cached) ++ _childClusters.flatMap(_.getCachedNodes)).toSeq
 
-  def getBarrierClusters: Seq[RDDOperationCluster] = {
-    _childClusters.filter(_.barrier) ++ _childClusters.flatMap(_.getBarrierClusters)
-  }
+  def getBarrierClusters: Seq[RDDOperationCluster] =
+    (_childClusters.filter(_.barrier) ++ _childClusters.flatMap(_.getBarrierClusters)).toSeq
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[RDDOperationCluster]
 
@@ -209,7 +207,7 @@ private[spark] object RDDOperationGraph extends Logging {
       }
     }
 
-    RDDOperationGraph(internalEdges, outgoingEdges, incomingEdges, rootCluster)
+    RDDOperationGraph(internalEdges.toSeq, outgoingEdges.toSeq, incomingEdges.toSeq, rootCluster)
   }
 
   /**

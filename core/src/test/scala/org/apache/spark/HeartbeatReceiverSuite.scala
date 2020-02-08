@@ -260,7 +260,7 @@ class HeartbeatReceiverSuite
     // We may receive undesired SparkListenerExecutorAdded from LocalSchedulerBackend,
     // so exclude it from the map. See SPARK-10800.
     heartbeatReceiver.invokePrivate(_executorLastSeen()).
-      filterKeys(_ != SparkContext.DRIVER_IDENTIFIER)
+      filterKeys(_ != SparkContext.DRIVER_IDENTIFIER).toMap
   }
 }
 
@@ -284,6 +284,8 @@ private class FakeSchedulerBackend(
     rpcEnv: RpcEnv,
     clusterManagerEndpoint: RpcEndpointRef)
   extends CoarseGrainedSchedulerBackend(scheduler, rpcEnv) {
+  
+  def this() = this(null, null, null)
 
   protected override def doRequestTotalExecutors(requestedTotal: Int): Future[Boolean] = {
     clusterManagerEndpoint.ask[Boolean](

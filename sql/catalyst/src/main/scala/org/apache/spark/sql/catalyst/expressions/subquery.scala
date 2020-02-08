@@ -204,7 +204,7 @@ object SubExprUtils extends PredicateHelper {
           e
       }
     }
-    outerExpressions
+    outerExpressions.toSeq
   }
 
   /**

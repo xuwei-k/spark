@@ -425,7 +425,7 @@ case class StructType(fields: Array[StructField]) extends DataType with Seq[Stru
   override def simpleString: String = {
     val fieldTypes = fields.view.map(field => s"${field.name}:${field.dataType.simpleString}")
     truncatedString(
-      fieldTypes,
+      fieldTypes.toSeq,
       "struct<", ",", ">",
       SQLConf.get.maxToStringFields)
   }
@@ -542,7 +542,7 @@ object StructType extends AbstractDataType {
 
   def apply(fields: java.util.List[StructField]): StructType = {
     import scala.collection.JavaConverters._
-    StructType(fields.asScala)
+    StructType(fields.asScala.toSeq)
   }
 
   private[sql] def fromAttributes(attributes: Seq[Attribute]): StructType =
@@ -606,7 +606,7 @@ object StructType extends AbstractDataType {
             newFields += f
           }
 
-        StructType(newFields)
+        StructType(newFields.toSeq)
 
       case (DecimalType.Fixed(leftPrecision, leftScale),
         DecimalType.Fixed(rightPrecision, rightScale)) =>

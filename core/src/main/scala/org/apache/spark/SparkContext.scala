@@ -2494,7 +2494,7 @@ class SparkContext(config: SparkConf) extends Logging {
     driverUpdates.put(EventLoggingListener.DRIVER_STAGE_KEY, new ExecutorMetrics(currentMetrics))
     val accumUpdates = new Array[(Long, Int, Int, Seq[AccumulableInfo])](0)
     listenerBus.post(SparkListenerExecutorMetricsUpdate("driver", accumUpdates,
-      driverUpdates))
+      driverUpdates.toMap))
   }
 
   // In order to prevent multiple SparkContexts from being active at the same time, mark this

@@ -17,8 +17,6 @@
 
 package org.apache.spark.mllib.clustering
 
-import scala.collection.mutable.IndexedSeq
-
 import breeze.linalg.{diag, DenseMatrix => BreezeMatrix, DenseVector => BDV, Vector => BV}
 
 import org.apache.spark.annotation.Since
@@ -189,7 +187,7 @@ class GaussianMixture private (
       case None =>
         val samples = breezeData.takeSample(withReplacement = true, k * nSamples, seed)
         (Array.fill(k)(1.0 / k), Array.tabulate(k) { i =>
-          val slice = samples.view(i * nSamples, (i + 1) * nSamples)
+          val slice = samples.view.slice(i * nSamples, (i + 1) * nSamples).toIndexedSeq
           new MultivariateGaussian(vectorMean(slice), initCovariance(slice))
         })
     }

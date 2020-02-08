@@ -126,7 +126,7 @@ final private[streaming] class DStreamGraph extends Serializable with Logging {
       }
     }
     logDebug("Generated " + jobs.length + " jobs for time " + time)
-    jobs
+    jobs.toSeq
   }
 
   def clearMetadata(time: Time): Unit = {

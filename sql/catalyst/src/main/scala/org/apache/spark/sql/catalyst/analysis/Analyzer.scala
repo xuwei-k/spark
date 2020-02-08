@@ -945,7 +945,7 @@ class Analyzer(
         validatePartitionSpec(partCols, i.partitionSpec)
 
         val staticPartitions = i.partitionSpec.filter(_._2.isDefined).mapValues(_.get)
-        val query = addStaticPartitionColumns(r, i.query, staticPartitions)
+        val query = addStaticPartitionColumns(r, i.query, staticPartitions.toMap)
         val dynamicPartitionOverwrite = partCols.size > staticPartitions.size &&
           conf.partitionOverwriteMode == PartitionOverwriteMode.DYNAMIC
 
@@ -954,7 +954,8 @@ class Analyzer(
         } else if (dynamicPartitionOverwrite) {
           OverwritePartitionsDynamic.byPosition(r, query)
         } else {
-          OverwriteByExpression.byPosition(r, query, staticDeleteExpression(r, staticPartitions))
+          OverwriteByExpression.byPosition(r, query,
+            staticDeleteExpression(r, staticPartitions.toMap))
         }
     }
 
@@ -2515,7 +2516,7 @@ class Analyzer(
       val windowOps =
         groupedWindowExpressions.foldLeft(child) {
           case (last, ((partitionSpec, orderSpec, _), windowExpressions)) =>
-            Window(windowExpressions, partitionSpec, orderSpec, last)
+            Window(windowExpressions.toSeq, partitionSpec, orderSpec, last)
         }
 
       // Finally, we create a Project to output windowOps's output

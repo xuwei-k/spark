@@ -146,7 +146,7 @@ private[streaming] class FileBasedWriteAheadLog(
     } else {
       // For performance gains, it makes sense to parallelize the recovery if
       // closeFileAfterWrite = true
-      seqToParIterator(executionContext, logFilesToRead, readFile).asJava
+      seqToParIterator(executionContext, logFilesToRead.toSeq, readFile).asJava
     }
   }
 
@@ -246,7 +246,7 @@ private[streaming] class FileBasedWriteAheadLog(
       // leads to much clearer code.
       if (fileSystem.getFileStatus(logDirectoryPath).isDirectory) {
         val logFileInfo = logFilesTologInfo(
-          fileSystem.listStatus(logDirectoryPath).map { _.getPath })
+          fileSystem.listStatus(logDirectoryPath).map(_.getPath).toSeq)
         pastLogs.clear()
         pastLogs ++= logFileInfo
         logInfo(s"Recovered ${logFileInfo.size} write ahead log files from $logDirectory")

@@ -19,7 +19,6 @@ package org.apache.spark.rdd
 
 import java.io._
 
-import scala.Serializable
 import scala.collection.Map
 import scala.collection.immutable.NumericRange
 import scala.collection.mutable.ArrayBuffer
@@ -135,7 +134,7 @@ private object ParallelCollectionRDD {
             new Range.Inclusive(r.start + start * r.step, r.end, r.step)
           }
           else {
-            new Range(r.start + start * r.step, r.start + end * r.step, r.step)
+            new Range.Exclusive(r.start + start * r.step, r.start + end * r.step, r.step)
           }
         }.toSeq.asInstanceOf[Seq[Seq[T]]]
       case nr: NumericRange[_] =>
@@ -147,7 +146,7 @@ private object ParallelCollectionRDD {
           slices += r.take(sliceSize).asInstanceOf[Seq[T]]
           r = r.drop(sliceSize)
         }
-        slices
+        slices.toSeq
       case _ =>
         val array = seq.toArray // To prevent O(n^2) operations for List etc
         positions(array.length, numSlices).map { case (start, end) =>

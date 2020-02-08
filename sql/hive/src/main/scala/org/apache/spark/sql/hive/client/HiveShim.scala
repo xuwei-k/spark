@@ -356,7 +356,7 @@ private[client] class Shim_v0_12 extends Shim with Logging {
   override def getDriverResults(driver: Driver): Seq[String] = {
     val res = new JArrayList[String]()
     getDriverResultsMethod.invoke(driver, res)
-    res.asScala
+    res.asScala.toSeq
   }
 
   override def getMetastoreClientConnectRetryDelayMillis(conf: HiveConf): Long = {
@@ -584,7 +584,7 @@ private[client] class Shim_v0_13 extends Shim_v0_12 {
       }
       FunctionResource(FunctionResourceType.fromString(resourceType), uri.getUri())
     }
-    CatalogFunction(name, hf.getClassName, resources)
+    CatalogFunction(name, hf.getClassName, resources.toSeq)
   }
 
   override def getFunctionOption(hive: Hive, db: String, name: String): Option[CatalogFunction] = {
@@ -607,7 +607,7 @@ private[client] class Shim_v0_13 extends Shim_v0_12 {
   }
 
   override def listFunctions(hive: Hive, db: String, pattern: String): Seq[String] = {
-    hive.getFunctions(db, pattern).asScala
+    hive.getFunctions(db, pattern).asScala.toSeq
   }
 
   /**
@@ -826,7 +826,7 @@ private[client] class Shim_v0_13 extends Shim_v0_12 {
         case s: String => s
         case a: Array[Object] => a(0).asInstanceOf[String]
       }
-    }
+    }.toSeq
   }
 
   override def getDatabaseOwnerName(db: Database): String = {

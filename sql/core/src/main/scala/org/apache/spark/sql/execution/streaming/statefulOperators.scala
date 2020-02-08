@@ -93,8 +93,8 @@ trait StateStoreWriter extends StatefulOperator { self: SparkPlan =>
     val customMetrics = stateStoreCustomMetrics
       .map(entry => entry._1 -> longMetric(entry._1).value)
 
-    val javaConvertedCustomMetrics: java.util.HashMap[String, java.lang.Long] =
-      new java.util.HashMap(customMetrics.mapValues(long2Long).asJava)
+    val javaConvertedCustomMetrics: java.util.Map[String, java.lang.Long] =
+      customMetrics.mapValues(long2Long).toMap.asJava
 
     new StateOperatorProgress(
       numRowsTotal = longMetric("numTotalStateRows").value,

@@ -35,7 +35,7 @@ import org.apache.spark.input.WholeTextFileRecordReader
  */
 class HadoopFileWholeTextReader(file: PartitionedFile, conf: Configuration)
   extends Iterator[Text] with Closeable {
-  private val iterator = {
+  private val lineIterator = {
     val fileSplit = new CombineFileSplit(
       Array(new Path(new URI(file.filePath))),
       Array(file.start),
@@ -50,9 +50,9 @@ class HadoopFileWholeTextReader(file: PartitionedFile, conf: Configuration)
     new RecordReaderIterator(reader)
   }
 
-  override def hasNext: Boolean = iterator.hasNext
+  override def hasNext: Boolean = lineIterator.hasNext
 
-  override def next(): Text = iterator.next()
+  override def next(): Text = lineIterator.next()
 
-  override def close(): Unit = iterator.close()
+  override def close(): Unit = lineIterator.close()
 }

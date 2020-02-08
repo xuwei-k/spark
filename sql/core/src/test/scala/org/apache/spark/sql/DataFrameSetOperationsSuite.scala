@@ -302,7 +302,7 @@ class DataFrameSetOperationsSuite extends QueryTest with SharedSparkSession {
         case (data, index) =>
           val rng = new org.apache.spark.util.random.XORShiftRandom(7 + index)
           data.filter(_.getInt(0) < rng.nextDouble() * 10)
-      }
+      }.toSeq
     }
 
     val union = df1.union(df2)

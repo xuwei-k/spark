@@ -244,7 +244,7 @@ abstract class ShowCreateTableSuite extends QueryTest with SQLTestUtils {
       table.copy(
         createTime = 0L,
         lastAccessTime = 0L,
-        properties = table.properties.filterKeys(!nondeterministicProps.contains(_)),
+        properties = table.properties.filterKeys(!nondeterministicProps.contains(_)).toMap,
         stats = None,
         ignoredProperties = Map.empty
       )

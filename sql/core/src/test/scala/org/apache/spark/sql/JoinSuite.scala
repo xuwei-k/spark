@@ -708,7 +708,7 @@ class JoinSuite extends QueryTest with SharedSparkSession with AdaptiveSparkPlan
               |ON
               |  big.key = small.a
             """.stripMargin),
-          expected
+          expected.toSeq
         )
       }
 
@@ -725,7 +725,7 @@ class JoinSuite extends QueryTest with SharedSparkSession with AdaptiveSparkPlan
               |ON
               |  big.key = small.a
             """.stripMargin),
-          expected
+          expected.toSeq
         )
       }
     }
@@ -766,7 +766,7 @@ class JoinSuite extends QueryTest with SharedSparkSession with AdaptiveSparkPlan
               |ON
               |  big.key = small.a
             """.stripMargin),
-          expected
+          expected.toSeq
         )
       }
 
@@ -783,7 +783,7 @@ class JoinSuite extends QueryTest with SharedSparkSession with AdaptiveSparkPlan
               |ON
               |  big.key = small.a
             """.stripMargin),
-          expected
+          expected.toSeq
         )
       }
 
@@ -802,7 +802,7 @@ class JoinSuite extends QueryTest with SharedSparkSession with AdaptiveSparkPlan
               |ON
               |  big.key = small.a
             """.stripMargin),
-          expected
+          expected.toSeq
         )
       }
     }

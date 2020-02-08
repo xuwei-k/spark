@@ -269,7 +269,7 @@ class ResolveSessionCatalog(
           c.partitioning ++ c.bucketSpec.map(_.asTransform),
           c.asSelect,
           convertTableProperties(c.properties, c.options, c.location, c.comment, c.provider),
-          writeOptions = c.options,
+          writeOptions = c.options.toMap,
           ignoreIfExists = c.ifNotExists)
       }
 
@@ -305,7 +305,7 @@ class ResolveSessionCatalog(
           c.partitioning ++ c.bucketSpec.map(_.asTransform),
           c.asSelect,
           convertTableProperties(c.properties, c.options, c.location, c.comment, c.provider),
-          writeOptions = c.options,
+          writeOptions = c.options.toMap,
           orCreate = c.orCreate)
       }
 

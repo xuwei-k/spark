@@ -50,7 +50,6 @@ case class ShowTablesExec(
           .copy()
       }
     }
-
-    rows
+    rows.toSeq
   }
 }

@@ -869,7 +869,7 @@ trait StreamTest extends QueryTest with SharedSparkSession with TimeLimits with 
     }
     if(!running) { actions += StartStream() }
     addCheck()
-    testStream(ds)(actions: _*)
+    testStream(ds)(actions.toSeq: _*)
   }
 
   object AwaitTerminationTester {

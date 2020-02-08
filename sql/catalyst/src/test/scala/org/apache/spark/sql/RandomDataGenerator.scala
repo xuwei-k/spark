@@ -133,7 +133,7 @@ object RandomDataGenerator {
       }
       i += 1
     }
-    StructType(fields)
+    StructType(fields.toSeq)
   }
 
   /**
@@ -316,6 +316,6 @@ object RandomDataGenerator {
           fields += gen()
       }
     }
-    Row.fromSeq(fields)
+    Row.fromSeq(fields.toSeq)
   }
 }
