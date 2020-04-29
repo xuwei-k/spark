@@ -211,8 +211,12 @@ object SparkBuild extends PomBuild {
     }
   )
 
-  lazy val sharedSettings = sparkGenjavadocSettings ++
-      (if (sys.env.contains("NOLINT_ON_COMPILE")) Nil else enableScalaStyle) ++ Seq(
+  // TODO: update unidoc and scalastyle sbt plugins for 2.13 compat.
+  // Note that recent version of these plugins may only be available
+  // for sbt 1, meaning the whole spark build would have to be
+  // updated from sbt 0.13 to sbt 1.
+  lazy val sharedSettings = /*sparkGenjavadocSettings ++
+      (if (sys.env.contains("NOLINT_ON_COMPILE")) Nil else enableScalaStyle) ++*/ Seq(
     exportJars in Compile := true,
     exportJars in Test := false,
     javaHome := sys.env.get("JAVA_HOME")
