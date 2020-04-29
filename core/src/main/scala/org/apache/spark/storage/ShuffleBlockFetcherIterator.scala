@@ -109,7 +109,7 @@ final class ShuffleBlockFetcherIterator(
 
   /** Host local blockIds to fetch by executors, excluding zero-sized blocks. */
   private[this] val hostLocalBlocksByExecutor =
-    LinkedHashMap[BlockManagerId, Seq[(BlockId, Long, Int)]]()
+    LinkedHashMap[BlockManagerId, collection.Seq[(BlockId, Long, Int)]]()
 
   /** Host local blocks to fetch, excluding zero-sized blocks. */
   private[this] val hostLocalBlocks = scala.collection.mutable.LinkedHashSet[(BlockId, Int)]()
@@ -299,13 +299,13 @@ final class ShuffleBlockFetcherIterator(
       if (address.executorId == blockManager.blockManagerId.executorId) {
         checkBlockSizes(blockInfos)
         val mergedBlockInfos = mergeContinuousShuffleBlockIdsIfNeeded(
-          blockInfos.map(info => FetchBlockInfo(info._1, info._2, info._3)))
+          blockInfos.map(info => FetchBlockInfo(info._1, info._2, info._3)).to(ArrayBuffer))
         localBlocks ++= mergedBlockInfos.map(info => (info.blockId, info.mapIndex))
         localBlockBytes += mergedBlockInfos.map(_.size).sum
       } else if (hostLocalDirReadingEnabled && address.host == blockManager.blockManagerId.host) {
         checkBlockSizes(blockInfos)
         val mergedBlockInfos = mergeContinuousShuffleBlockIdsIfNeeded(
-          blockInfos.map(info => FetchBlockInfo(info._1, info._2, info._3)).toSeq)
+          blockInfos.map(info => FetchBlockInfo(info._1, info._2, info._3)).to(ArrayBuffer))
         val blocksForAddress =
           mergedBlockInfos.map(info => (info.blockId, info.size, info.mapIndex))
         hostLocalBlocksByExecutor += address -> blocksForAddress
@@ -333,7 +333,7 @@ final class ShuffleBlockFetcherIterator(
     var curRequestSize = 0L
     var curBlocks = new ArrayBuffer[FetchBlockInfo]
 
-    def createFetchRequest(blocks: Seq[FetchBlockInfo]): Unit = {
+    def createFetchRequest(blocks: collection.Seq[FetchBlockInfo]): Unit = {
       collectedRemoteRequests += FetchRequest(address, blocks)
       logDebug(s"Creating fetch request of $curRequestSize at $address "
         + s"with ${blocks.size} blocks")
@@ -446,7 +446,7 @@ final class ShuffleBlockFetcherIterator(
       if (curBlocks.nonEmpty) {
         mergedBlockInfo += mergeFetchBlockInfo(curBlocks)
       }
-      mergedBlockInfo.toSeq
+      mergedBlockInfo
     } else {
       blocks
     }
@@ -920,7 +920,7 @@ object ShuffleBlockFetcherIterator {
    * @param address remote BlockManager to fetch from.
    * @param blocks Sequence of the information for blocks to fetch from the same address.
    */
-  case class FetchRequest(address: BlockManagerId, blocks: Seq[FetchBlockInfo]) {
+  case class FetchRequest(address: BlockManagerId, blocks: collection.Seq[FetchBlockInfo]) {
     val size = blocks.map(_.size).sum
   }
 
