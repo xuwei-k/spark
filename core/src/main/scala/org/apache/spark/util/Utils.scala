@@ -2880,18 +2880,18 @@ private[spark] object Utils extends Logging {
    * Looked at all the 0x0000-0xFFFF characters (unicode) and showed them under Xshell.
    * Found all the full width characters, then get the regular expression.
    */
-  private val fullWidthRegex = ("""[""" +
+  private val fullWidthRegex = ("[" +
     // scalastyle:off nonascii
-    """\u1100-\u115F""" +
-    """\u2E80-\uA4CF""" +
-    """\uAC00-\uD7A3""" +
-    """\uF900-\uFAFF""" +
-    """\uFE10-\uFE19""" +
-    """\uFE30-\uFE6F""" +
-    """\uFF00-\uFF60""" +
-    """\uFFE0-\uFFE6""" +
+    "\u1100-\u115F" +
+    "\u2E80-\uA4CF" +
+    "\uAC00-\uD7A3" +
+    "\uF900-\uFAFF" +
+    "\uFE10-\uFE19" +
+    "\uFE30-\uFE6F" +
+    "\uFF00-\uFF60" +
+    "\uFFE0-\uFFE6" +
     // scalastyle:on nonascii
-    """]""").r
+    "]").r
 
   /**
    * Return the number of half widths in a given string. Note that a full width character

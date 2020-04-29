@@ -32,10 +32,10 @@ import org.apache.spark.internal.Logging
  * @note This can't be part of PairRDDFunctions because we need more implicit parameters to
  * convert our keys and values to Writable.
  */
-class SequenceFileRDDFunctions[K <% Writable: ClassTag, V <% Writable : ClassTag](
+class SequenceFileRDDFunctions[K: ClassTag, V: ClassTag](
     self: RDD[(K, V)],
     _keyWritableClass: Class[_ <: Writable],
-    _valueWritableClass: Class[_ <: Writable])
+    _valueWritableClass: Class[_ <: Writable])(implicit evK: K => Writable, evV: V => Writable)
   extends Logging
   with Serializable {
 
@@ -52,7 +52,7 @@ class SequenceFileRDDFunctions[K <% Writable: ClassTag, V <% Writable : ClassTag
   def saveAsSequenceFile(
       path: String,
       codec: Option[Class[_ <: CompressionCodec]] = None): Unit = self.withScope {
-    def anyToWritable[U <% Writable](u: U): Writable = u
+    def anyToWritable[U](u: U)(implicit ev: U => Writable): Writable = u
 
     // TODO We cannot force the return type of `anyToWritable` be same as keyWritableClass and
     // valueWritableClass at the compile time. To implement that, we need to add type parameters to
