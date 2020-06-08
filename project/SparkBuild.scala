@@ -121,12 +121,6 @@ object SparkBuild extends PomBuild {
   lazy val publishLocalBoth = TaskKey[Unit]("publish-local", "publish local for m2 and ivy")
 
   lazy val sparkGenjavadocSettings: Seq[sbt.Def.Setting[_]] = Seq(
-    libraryDependencies += compilerPlugin(
-      "com.typesafe.genjavadoc" %% "genjavadoc-plugin" % unidocGenjavadocVersion.value cross CrossVersion.full),
-    scalacOptions ++= Seq(
-      "-P:genjavadoc:out=" + (target.value / "java"),
-      "-P:genjavadoc:strictVisibility=true" // hide package private types
-    )
   )
 
   lazy val scalaStyleRules = Project("scalaStyleRules", file("scalastyle"))
