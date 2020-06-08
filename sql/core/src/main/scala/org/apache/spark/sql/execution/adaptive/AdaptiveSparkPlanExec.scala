@@ -145,7 +145,7 @@ case class AdaptiveSparkPlanExec(
           metrics += metric._2
         }
     }
-    metrics
+    metrics.toSeq
   }
 
   private def getFinalPhysicalPlan(): SparkPlan = lock.synchronized {

@@ -3582,7 +3582,7 @@ class AstBuilder(conf: SQLConf) extends SqlBaseBaseVisitor[AnyRef] with Logging 
     CreateFunctionStatement(
       functionIdentifier,
       string(ctx.className),
-      resources,
+      resources.toSeq,
       ctx.TEMPORARY != null,
       ctx.EXISTS != null,
       ctx.REPLACE != null)

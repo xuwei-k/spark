@@ -204,7 +204,7 @@ case class OptimizeSkewedJoin(conf: SQLConf) extends Rule[SparkPlan] {
           right = s2.copy(child = PartialShuffleReaderExec(right, skewedPartitions.toSet)),
           isPartial = true)
         subJoins += optimizedSmj
-        UnionExec(subJoins)
+        UnionExec(subJoins.toSeq)
       } else {
         smj
       }

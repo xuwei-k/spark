@@ -482,7 +482,7 @@ object FileStreamSource {
     }
 
     private def buildSourceGlobFilters(sourcePath: Path): Seq[GlobFilter] = {
-      val filters = new scala.collection.mutable.MutableList[GlobFilter]()
+      val filters = new scala.collection.mutable.ListBuffer[GlobFilter]()
 
       var currentPath = sourcePath
       while (!currentPath.isRoot) {
