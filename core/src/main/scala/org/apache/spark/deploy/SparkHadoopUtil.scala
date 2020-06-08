@@ -392,7 +392,7 @@ private[spark] class SparkHadoopUtil extends Logging {
 
 }
 
-private[spark] object SparkHadoopUtil {
+object SparkHadoopUtil {
 
   private lazy val instance = new SparkHadoopUtil
 
